@@ -31,23 +31,25 @@ describe('TasksService', () => {
 
     describe('listTasks', () => {
         it('should return an array of tasks for the given user', async () => {
+            const userId = '1';
             const tasks = [
-                { id: '1', title: 'Task 1', owner: { id: '1' } },
-                { id: '2', title: 'Task 2', owner: { id: '1' } },
+                { id: '1', title: 'Task 1', owner: { id: userId } },
+                { id: '2', title: 'Task 2', owner: { id: userId } },
             ];
 
             jest.spyOn(tasksRepository, 'find').mockResolvedValue(tasks as any);
 
-            const result = await service.listTasks();
+            const result = await service.listTasks(userId); 
             expect(result).toEqual(tasks);
         });
 
         it('should return an empty array if no tasks are found for the given user', async () => {
+            const userId = '1';
             const tasks = [];
 
             jest.spyOn(tasksRepository, 'find').mockResolvedValue(tasks as any);
 
-            const result = await service.listTasks();
+            const result = await service.listTasks(userId); 
             expect(result).toEqual(tasks);
         });
     });
