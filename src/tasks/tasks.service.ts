@@ -23,7 +23,7 @@ export class TasksService {
             .getOne();
 
             if (!task) {
-                throw new NotFoundException('This task its not yours');
+                throw new NotFoundException('Task not found');
             }
         
 

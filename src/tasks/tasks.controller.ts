@@ -1,14 +1,22 @@
-import { Body, Controller, Get, Param, Post, Request, UnauthorizedException , ForbiddenException ,NotFoundException} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Request, UnauthorizedException , ForbiddenException ,NotFoundException, UseGuards } from '@nestjs/common';
 import { TasksService } from './tasks.service';
-
+import { AuthGuard } from '../auth/auth.guard'; 
 @Controller('tasks')
 export class TasksController {
     constructor(private readonly tasksService: TasksService) {}
 
+    @UseGuards(AuthGuard) 
+
     @Get('')
     async listTasks(@Request() req) {
+        console.log('Request User:', req.user); 
         const userId = req.user.id; 
-        return this.tasksService.listTasks(userId);
+        try {
+            return await this.tasksService.listTasks(userId);
+        } catch (error) {
+            console.error('Error fetching tasks:', error); // Log para ayudar en el debugging
+            throw new UnauthorizedException('Could not fetch tasks'); // Puedes cambiar el mensaje según tu necesidad
+        }
     }
 
     @Get('/:id')
@@ -40,4 +48,4 @@ export class TasksController {
             throw new UnauthorizedException('Error occurred while editing task');
         }
     }
-}
+}  
